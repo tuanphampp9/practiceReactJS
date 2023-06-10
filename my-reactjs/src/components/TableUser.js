@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
+import ModalEditUser from './ModalEditUser';
 const TableUser = (props) => {
     const [listUser, setListUser] = useState([]);
     const [totalUsers, setTotalUser] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [isShowModalEditUser, setIsShowModalEditUser] = useState(false);
+    const [dataUser, setDataUser] = useState(0);
     useEffect(() => {
         getAllUser(1);
     }, [])
@@ -29,6 +32,7 @@ const TableUser = (props) => {
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,12 +44,23 @@ const TableUser = (props) => {
                                     <td>{user.email}</td>
                                     <td>{user.first_name}</td>
                                     <td>{user.last_name}</td>
+                                    <td>
+                                        <button className='btn btn-warning mx-3'
+                                            onClick={() => {
+                                                setIsShowModalEditUser(true);
+                                                setDataUser(user);
+                                            }}>Edit</button>
+                                        <button className='btn btn-danger'>Delete</button>
+                                    </td>
                                 </tr>
                             )
                         })}
-
                 </tbody>
             </Table>
+            <ModalEditUser
+                show={isShowModalEditUser}
+                handleClose={() => setIsShowModalEditUser(false)}
+                dataUser={dataUser} />
             <ReactPaginate
                 breakLabel="..."
                 nextLabel="next >"

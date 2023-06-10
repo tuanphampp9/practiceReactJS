@@ -4,6 +4,8 @@ import Header from './components/Header';
 import ModalAddNew from './components/ModalAddNew';
 import TableUser from './components/TableUser';
 import Container from 'react-bootstrap/Container';
+import { ToastContainer, toast } from 'react-toastify';
+
 function App() {
   const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
   return (
@@ -19,6 +21,18 @@ function App() {
           show={isShowModalAddNew}
           handleClose={() => setIsShowModalAddNew(false)} />
       </Container>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }
