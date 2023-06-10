@@ -1,6 +1,6 @@
 import axios from './customize-axios'
-const fetchAllUser = () => {
-    return axios.get('/api/users?page=2');
+const fetchAllUser = (page) => {
+    return axios.get(`/api/users?page=${page}`);
 }
 
 export { fetchAllUser };
