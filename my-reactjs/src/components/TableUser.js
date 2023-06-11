@@ -7,8 +7,9 @@ import ModalConfirm from './ModalConfirm';
 import './TableUser.scss';
 import ModalAddNew from './ModalAddNew'
 import _ from 'lodash';
-import { CSVLink, CSVDownload } from "react-csv";
-
+import { CSVLink } from "react-csv";
+import Papa from 'papaparse'
+import { toast } from 'react-toastify';
 const TableUser = (props) => {
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
     const [listUser, setListUser] = useState([]);
@@ -66,19 +67,52 @@ const TableUser = (props) => {
     const getExportUsers = (event, done) => {
         let result = [];
         if (listUser && listUser.length > 0) {
-            result.push(["ID", "Email", "First Name", "Last Name", "Link Avatar"])
+            result.push(["email", "first_name", "last_name"])
             listUser.map((user) => {
                 let arr = [];
-                arr[0] = user.id;
-                arr[1] = user.email;
-                arr[2] = user.first_name;
-                arr[3] = user.last_name;
-                arr[4] = user.avatar;
+                arr[0] = user.email;
+                arr[1] = user.first_name;
+                arr[2] = user.last_name;
                 result.push(arr);
+
             })
             setDataExport(result)
             done();
         }
+    }
+    const handleImportUser = (event) => {
+        let file = event.target.files[0];
+        if (file.type !== 'text/csv') {
+            toast.error("only access file csv");
+            return;
+        }
+        // Parse local CSV file
+        Papa.parse(file, {
+            complete: function (results) {
+                if (results.data[0].length === 3) {
+                    if (results.data[0][0] !== 'email'
+                        || results.data[0][1] !== 'first_name'
+                        || results.data[0][2] !== 'last_name') {
+                        toast.error("title invalid!");
+                        return;
+                    } else {
+                        let convertArrayUserObject = [];
+                        results.data.map((item, index) => {
+                            if (item.length === 3 && index > 0) {
+                                convertArrayUserObject.push({
+                                    id: Math.floor(Math.random() * 1000),
+                                    email: item[0],
+                                    first_name: item[1],
+                                    last_name: item[2]
+                                })
+                            }
+                        })
+                        setListUser(convertArrayUserObject);
+
+                    }
+                }
+            }
+        });
     }
     return (
         <div>
@@ -86,17 +120,19 @@ const TableUser = (props) => {
                 <span>List user:</span>
                 <div>
                     <label htmlFor='test' className='btn btn-warning'>
-                        <i class="fa-solid fa-file-import"></i>
+                        <i className="fa-solid fa-file-import"></i>
                         Import
                     </label>
-                    <input type="file" id="test" hidden />
+                    <input type="file" id="test"
+                        onChange={handleImportUser}
+                        hidden />
                     <CSVLink data={dataEport}
                         filename={"my-file.csv"}
                         className="btn btn-primary"
                         asyncOnClick={true}
                         onClick={getExportUsers}
                     >
-                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <i className="fa-solid fa-file-arrow-down"></i>
                         Export
                     </CSVLink>
                     <button className='btn btn-success' onClick={() => setIsShowModalAddNew(true)}>+ Add new user</button>
