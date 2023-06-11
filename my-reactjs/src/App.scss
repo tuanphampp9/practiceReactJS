@@ -20,4 +20,59 @@ code {
       margin: 0px 5px;
     }
   }
+  .login-container{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+
+    .title{
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 30px 0px;
+    }
+    .text{
+      font-weight: 700;
+      padding: 3px 0px;
+    }
+    input{
+      padding:7px 5px;
+      margin-bottom: 5px;
+      border-radius: 3px;
+      outline: none;
+      width: 100%;
+      &:hover{
+        background-color: rgb(214, 213, 213);
+      }
+    }
+    .box-password{
+      position: relative;
+      .eye{
+        position: absolute;
+        right:7px;
+        top:13px;
+        cursor: pointer;
+      }
+    }
+    button{
+      padding:7px;
+      border-radius:3px;
+      font-size: 18px;
+      background: transparent;
+      font-weight: 600;
+      cursor: not-allowed;
+      &.active{
+        color:white;
+        background-color: rgb(246, 88, 88);
+        border: none;
+      }
+    }
+    .back{
+      text-align: center;
+      margin-top: 7px;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
 }
