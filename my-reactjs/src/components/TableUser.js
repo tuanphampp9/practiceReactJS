@@ -4,9 +4,13 @@ import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
-import './TableUser.scss'
+import './TableUser.scss';
+import ModalAddNew from './ModalAddNew'
 import _ from 'lodash';
+import { CSVLink, CSVDownload } from "react-csv";
+
 const TableUser = (props) => {
+    const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
     const [listUser, setListUser] = useState([]);
     const [totalUsers, setTotalUser] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -16,6 +20,8 @@ const TableUser = (props) => {
     const [sortBy, setSortBy] = useState('asc');
     const [sortField, setSortField] = useState('id');
     const [idPage, setIdPage] = useState(0);
+    const [dataEport, setDataExport] = useState([]);
+
     useEffect(() => {
         getAllUser(1);
     }, [])
@@ -56,8 +62,46 @@ const TableUser = (props) => {
         }
     }, 500)
     console.log(sortBy, sortField);
+
+    const getExportUsers = (event, done) => {
+        let result = [];
+        if (listUser && listUser.length > 0) {
+            result.push(["ID", "Email", "First Name", "Last Name", "Link Avatar"])
+            listUser.map((user) => {
+                let arr = [];
+                arr[0] = user.id;
+                arr[1] = user.email;
+                arr[2] = user.first_name;
+                arr[3] = user.last_name;
+                arr[4] = user.avatar;
+                result.push(arr);
+            })
+            setDataExport(result)
+            done();
+        }
+    }
     return (
         <div>
+            <div className="my-4 custom-box-add">
+                <span>List user:</span>
+                <div>
+                    <label htmlFor='test' className='btn btn-warning'>
+                        <i class="fa-solid fa-file-import"></i>
+                        Import
+                    </label>
+                    <input type="file" id="test" hidden />
+                    <CSVLink data={dataEport}
+                        filename={"my-file.csv"}
+                        className="btn btn-primary"
+                        asyncOnClick={true}
+                        onClick={getExportUsers}
+                    >
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        Export
+                    </CSVLink>
+                    <button className='btn btn-success' onClick={() => setIsShowModalAddNew(true)}>+ Add new user</button>
+                </div>
+            </div>
             <div className='col-4 my-3' >
                 <input className='form-control' placeholder='Search user by email'
                     onChange={(event) => handleSearch(event)} />
@@ -118,6 +162,9 @@ const TableUser = (props) => {
                         })}
                 </tbody>
             </Table>
+            <ModalAddNew
+                show={isShowModalAddNew}
+                handleClose={() => setIsShowModalAddNew(false)} />
             <ModalEditUser
                 show={isShowModalEditUser}
                 handleClose={() => setIsShowModalEditUser(false)}

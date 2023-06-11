@@ -16,5 +16,8 @@ code {
     display:flex;
     align-items: center;
     justify-content: space-between;
+    .btn-primary{
+      margin: 0px 5px;
+    }
   }
 }
