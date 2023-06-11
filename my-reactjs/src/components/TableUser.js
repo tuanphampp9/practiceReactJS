@@ -3,12 +3,14 @@ import Table from 'react-bootstrap/Table';
 import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModalEditUser from './ModalEditUser';
+import ModalConfirm from './ModalConfirm';
 const TableUser = (props) => {
     const [listUser, setListUser] = useState([]);
     const [totalUsers, setTotalUser] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [isShowModalEditUser, setIsShowModalEditUser] = useState(false);
-    const [dataUser, setDataUser] = useState(0);
+    const [isShowModalDeleteUser, setIsShowModalDeleteUser] = useState(false);
+    const [dataUser, setDataUser] = useState({});
     useEffect(() => {
         getAllUser(1);
     }, [])
@@ -22,6 +24,11 @@ const TableUser = (props) => {
     }
     const handlePageClick = (event) => {
         getAllUser(event.selected + 1);
+    }
+    const handleDeleteUser = (id) => {
+        console.log(id);
+        let newListUser = listUser.filter((user) => user.id !== id);
+        setListUser(newListUser);
     }
     return (
         <div>
@@ -50,7 +57,11 @@ const TableUser = (props) => {
                                                 setIsShowModalEditUser(true);
                                                 setDataUser(user);
                                             }}>Edit</button>
-                                        <button className='btn btn-danger'>Delete</button>
+                                        <button className='btn btn-danger'
+                                            onClick={() => {
+                                                setIsShowModalDeleteUser(true);
+                                                setDataUser(user);
+                                            }}>Delete</button>
                                     </td>
                                 </tr>
                             )
@@ -61,6 +72,11 @@ const TableUser = (props) => {
                 show={isShowModalEditUser}
                 handleClose={() => setIsShowModalEditUser(false)}
                 dataUser={dataUser} />
+            <ModalConfirm
+                show={isShowModalDeleteUser}
+                handleClose={() => setIsShowModalDeleteUser(false)}
+                dataUser={dataUser}
+                handleConfirmDelete={handleDeleteUser} />
             <ReactPaginate
                 breakLabel="..."
                 nextLabel="next >"
