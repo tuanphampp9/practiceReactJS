@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
 import './TableUser.scss'
-import _sortBy from 'lodash';
+import _ from 'lodash';
 const TableUser = (props) => {
     const [listUser, setListUser] = useState([]);
     const [totalUsers, setTotalUser] = useState(0);
@@ -15,6 +15,7 @@ const TableUser = (props) => {
     const [dataUser, setDataUser] = useState({});
     const [sortBy, setSortBy] = useState('asc');
     const [sortField, setSortField] = useState('id');
+    const [idPage, setIdPage] = useState(0);
     useEffect(() => {
         getAllUser(1);
     }, [])
@@ -27,6 +28,7 @@ const TableUser = (props) => {
         }
     }
     const handlePageClick = (event) => {
+        setIdPage(event.selected + 1);
         getAllUser(event.selected + 1);
     }
     const handleDeleteUser = (id) => {
@@ -38,13 +40,28 @@ const TableUser = (props) => {
         setSortBy(sortBy);
         setSortField(sortField);
         let newListUser = listUser;
-        newListUser = _sortBy.orderBy(newListUser, [sortField], [sortBy]);
+        newListUser = _.orderBy(newListUser, [sortField], [sortBy]);
         setListUser(newListUser);
 
     }
+    const handleSearch = _.debounce((event) => {
+        let keyword = event.target.value;
+        if (keyword) {
+            let newListUser = listUser;
+            newListUser = newListUser.filter((user) => user.email.includes(keyword));
+            console.log(newListUser);
+            setListUser(newListUser);
+        } else {
+            getAllUser(idPage);
+        }
+    }, 500)
     console.log(sortBy, sortField);
     return (
         <div>
+            <div className='col-4 my-3' >
+                <input className='form-control' placeholder='Search user by email'
+                    onChange={(event) => handleSearch(event)} />
+            </div>
             <Table striped bordered hover>
                 <thead>
                     <tr>
