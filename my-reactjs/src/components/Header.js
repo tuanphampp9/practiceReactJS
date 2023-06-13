@@ -5,12 +5,15 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import logo from '../assets/images/logo_bird.png'
 import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { UserContext } from "../context/UserContext";
+import { useContext } from 'react';
 const Header = (props) => {
     const location = useLocation();
     console.log(location);
     let navigate = useNavigate();
+    const { logout, user } = useContext(UserContext);
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        logout();
         navigate("/login");
         toast.success("logout is successfully!");
     }
@@ -32,9 +35,11 @@ const Header = (props) => {
                             <NavLink className="nav-link" to="/">Home</NavLink>
                             <NavLink className="nav-link" to="/users">Manage Users</NavLink>
                         </Nav>
+                        {(user && user.email) && <span>Welcome to email: {user.email}</span>}
                         <Nav>
                             <NavDropdown title="Account" id="basic-nav-dropdown">
-                                <NavLink className="nav-link" to="/login">Login</NavLink>
+                                {!(user && user.email) &&
+                                    <NavLink className="nav-link" to="/login">Login</NavLink>}
                                 <NavDropdown.Item className="nav-link" onClick={() => handleLogout()}>
                                     logout
                                 </NavDropdown.Item>
@@ -43,7 +48,7 @@ const Header = (props) => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-        </div>
+        </div >
     )
 }
 

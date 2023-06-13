@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react"
 import { loginApi } from "../services/UserService";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { useContext } from 'react';
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [loadingAPI, setLoadingAPI] = useState(false);
     const navigate = useNavigate();
+    const { loginContext } = useContext(UserContext);
     useEffect(() => {
         let token = localStorage.getItem("token");
         if (token) {
@@ -25,7 +28,8 @@ const Login = () => {
             /* user not found */
             toast.error(res.data.error);
         } else {
-            localStorage.setItem("token", res.token)
+
+            loginContext(email, res.token);
             toast.success("login successfully!");
             navigate("/");
         }
@@ -57,7 +61,8 @@ const Login = () => {
                 onClick={() => handleLogin()}>
                 {loadingAPI && <i className="fas fa-circle-notch fa-spin"></i>}&nbsp;Login</button>
             <div className="back">
-                <i className="fa-solid fa-angle-left"></i> Go back
+                <i className="fa-solid fa-angle-left"></i>
+                <NavLink className="back" to="/">Go back</NavLink>
             </div>
         </div>
     )

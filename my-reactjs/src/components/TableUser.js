@@ -10,7 +10,6 @@ import _ from 'lodash';
 import { CSVLink } from "react-csv";
 import Papa from 'papaparse'
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 const TableUser = (props) => {
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
     const [listUser, setListUser] = useState([]);
@@ -23,14 +22,9 @@ const TableUser = (props) => {
     const [sortField, setSortField] = useState('id');
     const [idPage, setIdPage] = useState(0);
     const [dataEport, setDataExport] = useState([]);
-    let token = localStorage.getItem("token");
-    let navigate = useNavigate();
     useEffect(() => {
-        if (!token) {
-            navigate("/login");
-        }
         getAllUser(1);
-    }, [token])
+    }, [])
     const getAllUser = async (page) => {
         let res = await fetchAllUser(page);
         if (res && res.data) {
