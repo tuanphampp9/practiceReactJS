@@ -115,7 +115,7 @@ const TableUser = (props) => {
     }
     return (
         <div>
-            <div className="my-4 custom-box-add">
+            <div className="my-4 custom-box-add d-sm-flex">
                 <span>List user:</span>
                 <div>
                     <label htmlFor='test' className='btn btn-warning'>
@@ -137,66 +137,69 @@ const TableUser = (props) => {
                     <button className='btn btn-success' onClick={() => setIsShowModalAddNew(true)}>+ Add new user</button>
                 </div>
             </div>
-            <div className='col-4 my-3' >
+            <div className='col-12 col-sm-4 my-3' >
                 <input className='form-control' placeholder='Search user by email'
                     onChange={(event) => handleSearch(event)} />
             </div>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>
-                            <div className='sort-header'>
-                                <span>STT</span>
-                                <span>
-                                    <i className="fa-solid fa-arrow-down"
-                                        onClick={() => handleSort('desc', 'id')}></i>
-                                    <i className="fa-solid fa-arrow-up"
-                                        onClick={() => handleSort('asc', 'id')}></i>
-                                </span>
-                            </div>
-                        </th>
-                        <th>Email</th>
-                        <th>
-                            <div className='sort-header'>
-                                <span>First Name</span>
-                                <span>
-                                    <i className="fa-solid fa-arrow-down"
-                                        onClick={() => handleSort('desc', 'first_name')}></i>
-                                    <i className="fa-solid fa-arrow-up"
-                                        onClick={() => handleSort('asc', 'first_name')}></i>
-                                </span>
-                            </div>
-                        </th>
-                        <th>Last Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listUser && listUser.length > 0 &&
-                        listUser.map((user, index) => {
-                            return (
-                                <tr key={`user-${index}`}>
-                                    <td>{user.id}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.first_name}</td>
-                                    <td>{user.last_name}</td>
-                                    <td>
-                                        <button className='btn btn-warning mx-3'
-                                            onClick={() => {
-                                                setIsShowModalEditUser(true);
-                                                setDataUser(user);
-                                            }}>Edit</button>
-                                        <button className='btn btn-danger'
-                                            onClick={() => {
-                                                setIsShowModalDeleteUser(true);
-                                                setDataUser(user);
-                                            }}>Delete</button>
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                </tbody>
-            </Table>
+            <div className='custom-mize'>
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>
+                                <div className='sort-header'>
+                                    <span>STT</span>
+                                    <span>
+                                        <i className="fa-solid fa-arrow-down"
+                                            onClick={() => handleSort('desc', 'id')}></i>
+                                        <i className="fa-solid fa-arrow-up"
+                                            onClick={() => handleSort('asc', 'id')}></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th>Email</th>
+                            <th>
+                                <div className='sort-header'>
+                                    <span>First Name</span>
+                                    <span>
+                                        <i className="fa-solid fa-arrow-down"
+                                            onClick={() => handleSort('desc', 'first_name')}></i>
+                                        <i className="fa-solid fa-arrow-up"
+                                            onClick={() => handleSort('asc', 'first_name')}></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th>Last Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listUser && listUser.length > 0 &&
+                            listUser.map((user, index) => {
+                                return (
+                                    <tr key={`user-${index}`}>
+                                        <td>{user.id}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.first_name}</td>
+                                        <td>{user.last_name}</td>
+                                        <td>
+                                            <button className='btn btn-warning mx-3'
+                                                onClick={() => {
+                                                    setIsShowModalEditUser(true);
+                                                    setDataUser(user);
+                                                }}>Edit</button>
+                                            <button className='btn btn-danger'
+                                                onClick={() => {
+                                                    setIsShowModalDeleteUser(true);
+                                                    setDataUser(user);
+                                                }}>Delete</button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                    </tbody>
+                </Table>
+            </div>
+
             <ModalAddNew
                 show={isShowModalAddNew}
                 handleClose={() => setIsShowModalAddNew(false)} />

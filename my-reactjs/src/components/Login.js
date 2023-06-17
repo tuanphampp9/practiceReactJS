@@ -23,7 +23,7 @@ const Login = () => {
             return;
         }
         setLoadingAPI(true);
-        let res = await loginApi(email, password);
+        let res = await loginApi(email.trim(), password);
         if (res && res.status === 400) {
             /* user not found */
             toast.error(res.data.error);
@@ -36,6 +36,11 @@ const Login = () => {
         return setLoadingAPI(false);
     }
     console.log(loadingAPI);
+    const handlePressEnter = (event) => {
+        if (event && event.key === 'Enter') {
+            handleLogin();
+        }
+    }
     return (
         <div className="login-container col-12 col-sm-6">
             <div className="title">Log in</div>
@@ -50,7 +55,8 @@ const Login = () => {
                     type={isShowPassword === true ? "text" : "password"}
                     placeholder="Password..."
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)} />
+                    onChange={(event) => setPassword(event.target.value)}
+                    onKeyDown={(event) => handlePressEnter(event)} />
                 <i
                     className={isShowPassword === true ? "fa-solid fa-eye eye" : "fa-solid fa-eye-slash eye"}
                     onClick={() => setIsShowPassword(!isShowPassword)}></i>
